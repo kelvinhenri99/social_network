@@ -60,7 +60,7 @@ class AuthController extends Controller
 
 			return response()->json(['data' => new UserResource($user)], JsonResponse::HTTP_CREATED);
 		} catch (\Exception $e) {
-			return response()->json(['error' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+			return response()->json(['errors' => [$e->getMessage()]], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
 		}
 	}
 

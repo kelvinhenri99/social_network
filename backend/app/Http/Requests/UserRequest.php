@@ -20,31 +20,20 @@ class UserRequest extends FormRequest
 				'min:3',
 				'max:255'
 			],
-			'username' => [
-				'required',
-			],
-			'email' => [
+		];
+		if ($this->method() === 'PUT') {
+			$rules['email'] = [
 				'required',
 				'email',
 				'max:255',
-				'unique:users'
-			],
-			'password' => [
-				'required',
+				"unique:users,email,{$this->id}"
+			];
+
+			$rules['password'] = [
+				'nullable',
 				'min:6',
-				'max:255'
-			],
-		];
-		/*         return [
-		'email' => [
-		'required', 'unique:users,email,' . optional($this->user)->id,
-		],
-		'username' => [
-		'required', 'unique:users,username,' . optional($this->user)->id,
-		],
-		'name' => ['required'],
-		'password' => (empty($this->user->password)) ? ['required', Password::defaults()] : '',
-		'address' => ['required'],
-		]; */
+				'max:100',
+			];
+		}
 	}
 }
