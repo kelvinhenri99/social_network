@@ -1,60 +1,91 @@
 import axios, { AxiosResponse } from 'axios';
 
-interface LoginData {
+export interface User {
+  name: string;
   email: string;
   password: string;
 }
 
-interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-}
-
-interface UserProfile {
-  name: string;
-  email: string;
+interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  user: User;
 }
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api/auth', //aqui você deve colocar a URL da sua API Laravel
+  baseURL: 'http://localhost:8000/api/auth',
 });
 
-api.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
+export async function login(email: string, password: string): Promise<LoginResponse> {
+  try {
+    const response: AxiosResponse<LoginResponse> = await api.post('/login', {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.errors[0]);
   }
-);
-
-export const login = async (data: LoginData): Promise<AxiosResponse> => {
-  const response = await api.post('/login', data);
-  return response;
 }
 
-export const register = async (data: RegisterData): Promise<AxiosResponse> => {
-  const response = await api.post('/register', data);
-  return response;
+export async function register(user: User): Promise<User> {
+  try {
+    const response: AxiosResponse<User> = await api.post('/register', user);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.errors[0]);
+  }
 }
 
-export const logout = async (): Promise<AxiosResponse> => {
-  const response = await api.post('/logout');
-  return response;
+export async function logout(): Promise<void> {
+  try {
+    await api.post('/logout');
+  } catch (error: any) {
+    throw new Error(error.response.data.errors[0]);
+  }
 }
 
-export const refresh = async (): Promise<AxiosResponse> => {
-  const response = await api.post('/refresh');
-  return response;
+export async function refreshToken(token: string): Promise<LoginResponse> {
+  try {
+    const response: AxiosResponse<LoginResponse> = await api.post('/refresh', null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.errors[0]);
+  }
 }
 
-export const getUserProfile = async (): Promise<AxiosResponse<UserProfile>> => {
-  const response = await api.get('/user-profile');
-  return response;
+export async function getUsers(): Promise<User[]> {
+  try {
+    const response: AxiosResponse<User[]> = await api.get('/users');
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.errors[0]);
+  }
+}
+
+export async function getUserById(id: string): Promise<User> {
+  try {
+    const response: AxiosResponse<User> = await api.get(`/users/${id}`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.errors[0]);
+  }
+}
+
+export async function updateUser(id: string, user: User, token: string): Promise<User> {
+  try {
+    const response: AxiosResponse<User> = await api.put(`/users/${id}`, user, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response.data.errors[0]);
+  }
 }
