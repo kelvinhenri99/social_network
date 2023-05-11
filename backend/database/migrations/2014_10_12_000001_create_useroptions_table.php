@@ -10,7 +10,7 @@ return new class extends Migration {
 	 */
 	public function up(): void
 	{
-		Schema::create('usersoptions', function (Blueprint $table) {
+		Schema::create('useroptions', function (Blueprint $table) {
 			$table->uuid('id');
 			$table->uuid('user_id');
 			$table->string('image')->nullable();
@@ -27,6 +27,6 @@ return new class extends Migration {
 	 */
 	public function down(): void
 	{
-		Schema::dropIfExists('usersoptions');
+		Schema::dropIfExists('useroptions');
 	}
 };

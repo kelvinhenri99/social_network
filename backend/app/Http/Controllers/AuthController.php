@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\userOption;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +56,14 @@ class AuthController extends Controller
 				array_merge(
 					$validator->validated(),
 					['password' => bcrypt($request->password)]
+				)
+			);
+
+			$userOptions = userOption::create(
+				array_merge(
+					[
+						'user_id' => $user->id,
+					]
 				)
 			);
 

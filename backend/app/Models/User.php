@@ -36,4 +36,11 @@ class User extends Authenticatable implements JWTSubject
 	{
 		return [];
 	}
+
+	public function users()
+	{
+		return $this->from('users')
+			->limit(100)
+			->get();
+	}
 }

@@ -13,7 +13,8 @@ class UserResource extends JsonResource
 			'id' => $this->id,
 			'name' => $this->name,
 			'email' => $this->email,
-			'created' => Carbon::make($this->created_at)->format('d-m-Y'),
+			'image' => $this->image,
+			'created_account' => Carbon::make($this->created_at)->format("d-m-Y"),
 		];
 	}
 }
