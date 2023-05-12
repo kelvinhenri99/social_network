@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, LoginResponse, login, logout, register, refreshToken } from '../services/api';
+import { User, LoginResponse, login, logout, register } from '../services/api';
 
 interface AuthContextData {
   user: User | null;
@@ -7,6 +7,7 @@ interface AuthContextData {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<User>;
+  isAuthenticated: boolean
 }
 
 interface AuthProviderProps {
@@ -21,6 +22,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -41,6 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     localStorage.setItem('user', JSON.stringify(response.user));
     localStorage.setItem('token', response.access_token);
+
   };
   
 
@@ -63,13 +66,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 const handleRegister = async (name: string, email: string, password: string) => {
   const user = await register(name, email, password);
   return user;
+  
 }
 
   return (
-    <AuthContext.Provider value={{ user, token, signIn, signOut, register: handleRegister }}>
+    <AuthContext.Provider value={{ user, token, signIn, signOut, register: handleRegister, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-
