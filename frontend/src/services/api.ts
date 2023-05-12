@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 export interface User {
   name: string;
@@ -6,7 +6,7 @@ export interface User {
   password: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   access_token: string;
   token_type: string;
   expires_in: number;
@@ -16,6 +16,19 @@ interface LoginResponse {
 const api = axios.create({
   baseURL: 'http://localhost:8000/api/auth',
 });
+
+function getHeaders(method = 'GET', token: string, body?: any): AxiosRequestConfig {
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    method,
+    data: body,
+  };
+}
+
+
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
   try {
@@ -29,30 +42,30 @@ export async function login(email: string, password: string): Promise<LoginRespo
   }
 }
 
-export async function register(user: User): Promise<User> {
+export async function register(name: string, email: string, password: string): Promise<User> {
   try {
-    const response: AxiosResponse<User> = await api.post('/register', user);
+    const response: AxiosResponse<User> = await api.post('/register', {
+      name,
+      email,
+      password,
+    });
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.errors[0]);
   }
 }
 
-export async function logout(): Promise<void> {
+export async function logout(token: string): Promise<void> {
   try {
-    await api.post('/logout');
+    await api.post('/logout', null, getHeaders('POST', token ));
   } catch (error: any) {
-    throw new Error(error.response.data.errors[0]);
+    throw new Error(error.response?.data?.errors?.[0] ?? 'Erro ao fazer logout');
   }
 }
 
 export async function refreshToken(token: string): Promise<LoginResponse> {
   try {
-    const response: AxiosResponse<LoginResponse> = await api.post('/refresh', null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response: AxiosResponse<LoginResponse> = await api.post('/refresh', null, getHeaders('POST', token ));
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.errors[0]);
@@ -79,11 +92,7 @@ export async function getUserById(id: string): Promise<User> {
 
 export async function updateUser(id: string, user: User, token: string): Promise<User> {
   try {
-    const response: AxiosResponse<User> = await api.put(`/users/${id}`, user, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response: AxiosResponse<User> = await api.put(`/users/${id}`, user, getHeaders('PUT', token ));
     return response.data;
   } catch (error: any) {
     throw new Error(error.response.data.errors[0]);
