@@ -1,64 +1,77 @@
 import { useState } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
+import { Box, Button, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
+import { useNavigate } from 'react-router-dom';
 
-import { useNavigate } from 'react-router-dom'
+const LoginPageContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100vh',
+});
 
-function LoginPage() {
+const LoginForm = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  maxWidth: '400px',
+  padding: '16px',
+  borderRadius: '4px',
+  backgroundColor: '#fff',
+});
+
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signIn } = useAuth();
-
-  const navigate = useNavigate()
-
-import { useNavigate } from 'react-router-dom'
-
-function LoginPage() {
-  const navigate = useNavigate()
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { signIn, signOut, user} = useAuth();
-
+  const { signIn, token } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       await signIn(email, password);
-      navigate('/')
-
+      if(token) {
+        navigate('/home')
+      }
+      console.log('Você está logado!');
     } catch (err) {
       console.log(err);
     }
   }
-
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate('/login')
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-   if (user) {
-    navigate('/');
-  }
-
 
 
   return (
-    <div>
-      <h1>Login Page</h1>
-      <button onClick={handleSignOut}>Logout</button>
-
-      <form onSubmit={handleSignIn}>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit">Entrar</button>
-      </form>
-    </div>
+    <LoginPageContainer>
+      <LoginForm onSubmit={handleSignIn}>
+        <TextField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          margin="normal"
+          required
+          fullWidth
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          margin="normal"
+          required
+          fullWidth
+        />
+        <Button variant="contained" type="submit" fullWidth>
+          Entrar
+        </Button>
+      </LoginForm>
+    </LoginPageContainer>
   );
 }
 
