@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAuth } from '../../contexts/AuthContext';
 
+
 const HomePage = () => {
   const { signOut, user } = useAuth();
 
@@ -10,8 +11,8 @@ const HomePage = () => {
       <h2>User: {user?.name}</h2>
       <h3>User: {user?.email}</h3>
       <button onClick={signOut}>Logout</button>
-    </div>
-  )
-}
+      )
+      }
 
 export default HomePage
+

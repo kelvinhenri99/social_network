@@ -1,5 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+
 import { getHeaders } from '../utils/utils'
+
 
 export interface User {
   name: string;
@@ -17,6 +19,19 @@ export interface LoginResponse {
 const api = axios.create({
   baseURL: 'http://localhost:8000/api/auth',
 });
+
+function getHeaders(method = 'GET', token: string, body?: any): AxiosRequestConfig {
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    method,
+    data: body,
+  };
+}
+
+
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
   try {

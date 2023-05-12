@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, LoginResponse, login, logout, register } from '../services/api';
 
+import { useNavigate } from 'react-router-dom'
+
 interface AuthContextData {
   user: User | null;
   token: string | null;
@@ -22,7 +24,8 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const isAuthenticated = !!user;
+  const isAuthenticated = !!token;
+  const navigate = useNavigate()
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -43,6 +46,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     localStorage.setItem('user', JSON.stringify(response.user));
     localStorage.setItem('token', response.access_token);
+
+    if(token && user) {
+      navigate('/')
+    }
 
   };
   
