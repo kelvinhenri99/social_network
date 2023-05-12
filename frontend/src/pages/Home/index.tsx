@@ -1,27 +1,18 @@
 import React from 'react'
 import { useAuth } from '../../contexts/AuthContext';
 
-import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
-  const navigate = useNavigate()
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate('/login')
-    } catch (err) {
-      console.log(err);
-    }
-  }
   return (
     <div>
       <h1>Home</h1>
-      <button onClick={handleSignOut}>Logout</button>
-    </div>
-  )
-}
+      <h2>User: {user?.name}</h2>
+      <h3>User: {user?.email}</h3>
+      <button onClick={signOut}>Logout</button>
+      )
+      }
 
 export default HomePage
+

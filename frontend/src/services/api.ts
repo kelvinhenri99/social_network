@@ -1,5 +1,8 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
+import { getHeaders } from '../utils/utils'
+
+
 export interface User {
   name: string;
   email: string;

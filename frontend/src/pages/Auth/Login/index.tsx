@@ -1,5 +1,16 @@
 import { useState } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
+
+
+import { useNavigate } from 'react-router-dom'
+
+function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { signIn } = useAuth();
+
+  const navigate = useNavigate()
+
 import { useNavigate } from 'react-router-dom'
 
 function LoginPage() {
@@ -7,6 +18,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signIn, signOut, user} = useAuth();
+
 
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,6 +31,7 @@ function LoginPage() {
       console.log(err);
     }
   }
+
 
   const handleSignOut = async () => {
     try {
@@ -33,12 +46,13 @@ function LoginPage() {
     navigate('/');
   }
 
-  
+
 
   return (
     <div>
       <h1>Login Page</h1>
       <button onClick={handleSignOut}>Logout</button>
+
       <form onSubmit={handleSignIn}>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
