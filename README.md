@@ -1,6 +1,8 @@
-## Getting Started
 
-1. Clone the repo
+
+Co-authored-by: kelvinhenri99 <kelvin5henri@gmail.com>
+
+## Getting Started
 
 ## Install dependencys
 
