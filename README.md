@@ -30,6 +30,11 @@
     ```sh
     php artisan key:generate
     ```
+    
+    9. Generate JWT key
+      ```sh
+      php artisan jwt:secret
+      ```
 
 ## Usage
 
