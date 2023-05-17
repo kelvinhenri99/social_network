@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -13,7 +14,7 @@ class UserResource extends JsonResource
 			'id' => $this->id,
 			'name' => $this->name,
 			'email' => $this->email,
-			'image' => $this->image,
+			'date_birth' => $this->date_birth,
 			'created_account' => Carbon::make($this->created_at)->format("d-m-Y"),
 		];
 	}

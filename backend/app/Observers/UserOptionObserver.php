@@ -9,7 +9,6 @@ class UserOptionObserver
 {
 	public function creating(userOption $userOption)
 	{
-
 		$userOption->id = Uuid::uuid4();
 	}
 }

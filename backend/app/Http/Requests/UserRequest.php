@@ -20,6 +20,9 @@ class UserRequest extends FormRequest
 				'min:3',
 				'max:255'
 			],
+			'date_birth' => [
+				'required',
+			],
 		];
 		if ($this->method() === 'PUT') {
 			$rules['email'] = [

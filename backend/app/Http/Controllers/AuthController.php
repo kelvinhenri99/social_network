@@ -45,6 +45,7 @@ class AuthController extends Controller
 			$validator = Validator::make($request->all(), [
 				'name' => 'required|string|between:2,100',
 				'email' => 'required|string|email|max:100|unique:users',
+				'date_birth' => 'required',
 				'password' => 'required|string|min:6',
 			]);
 
@@ -58,22 +59,25 @@ class AuthController extends Controller
 			$age = $current_date - (int) $date[0];
 
 			if ($age >= 18) {
-			$user = User::create(
-				array_merge(
-					$validator->validated(),
-					['password' => bcrypt($request->password)]
-				)
-			);
+				$user = User::create(
+					array_merge(
+						$validator->validated(),
+						[
+							'password' => bcrypt($request->password)
+						]
+					)
+				);
+				$userOptions = userOption::create(
+					array_merge(
+						[
+							'user_id' => $user->id,
+						]
+					)
+				);
+				return response()->json(['data' => new UserResource($user)], JsonResponse::HTTP_CREATED);
+			}
+			return response()->json(['message' => 'Você precisa ter no mínimo 18 anos']);
 
-			$userOptions = userOption::create(
-				array_merge(
-					[
-						'user_id' => $user->id,
-					]
-				)
-			);
-
-			return response()->json(['data' => new UserResource($user)], JsonResponse::HTTP_CREATED);
 		} catch (\Exception $e) {
 			return response()->json(['errors' => [$e->getMessage()]], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
 		}
