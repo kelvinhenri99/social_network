@@ -13,9 +13,8 @@ return new class extends Migration {
 		Schema::create('useroptions', function (Blueprint $table) {
 			$table->uuid('id');
 			$table->uuid('user_id');
-			$table->string('image')->nullable();
+			$table->string('image')->default('not_found.webp');
 			$table->string('background')->nullable();
-			$table->date('date_birth')->nullable();
 			$table->text('biography')->nullable();
 			$table->string('gender')->nullable();
 			$table->timestamps();
