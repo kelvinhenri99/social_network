@@ -52,6 +52,12 @@ class AuthController extends Controller
 				return response()->json(['errors' => $validator->errors()], JsonResponse::HTTP_BAD_REQUEST);
 			}
 
+			$date_birth = $request->date_birth;
+			$current_date = date('Y');
+			$date = explode("-", $date_birth);
+			$age = $current_date - (int) $date[0];
+
+			if ($age >= 18) {
 			$user = User::create(
 				array_merge(
 					$validator->validated(),
